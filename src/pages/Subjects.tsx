@@ -53,7 +53,14 @@ const Subjects = () => {
       description: "Grade 5 NCERT - Numbers, Addition, Fractions",
       icon: Calculator,
       color: "primary" as const,
-      route: "/chat",
+      route: "/maths-chapters",
+    },
+    {
+      title: "Science (विज्ञान)",
+      description: "Grade 5 NCERT - Body, Plants, Weather",
+      icon: Globe,
+      color: "accent" as const,
+      route: "/science-chapters",
     },
     {
       title: "Language Learning",
@@ -61,13 +68,6 @@ const Subjects = () => {
       icon: Book,
       color: "learning" as const,
       route: "/chat",
-    },
-    {
-      title: "More Coming Soon",
-      description: "Science, History & more subjects",
-      icon: Globe,
-      color: "accent" as const,
-      route: "/",
     },
   ];
 
@@ -136,6 +136,8 @@ const Subjects = () => {
               onClick={() => {
                 if (subject.route === "/chat") {
                   navigate(subject.route, { state: { pipeline: aiPipeline } });
+                } else if (subject.route === "/science-chapters" || subject.route === "/maths-chapters") {
+                  navigate(subject.route);
                 } else {
                   toast.info("Coming soon! Start with Maths for now.");
                 }
