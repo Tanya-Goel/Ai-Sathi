@@ -51,12 +51,12 @@ export const AIModelLoader = ({ onModelLoaded }: AIModelLoaderProps) => {
         setProgress(50);
         
         // Load Text Model - For explanations and conversations
-        // Using Qwen 2.5 0.5B - lightweight conversational model
-        console.log("📥 Loading Text Model (Qwen)...");
-        setStatus("Downloading explanation model (130MB)...");
+        // Using DistilGPT-2 - smaller, faster, well-supported by Transformers.js
+        console.log("📥 Loading Text Model (DistilGPT-2)...");
+        setStatus("Downloading explanation model (82M params)...");
         const textModel = await pipeline(
           "text-generation",
-          "Xenova/Qwen2.5-0.5B-Instruct",
+          "Xenova/distilgpt2",
           { 
             device: "wasm",
             dtype: "q8",
@@ -121,10 +121,10 @@ export const AIModelLoader = ({ onModelLoaded }: AIModelLoaderProps) => {
         
         <div className="p-4 bg-card rounded-xl border border-border">
           <p className="text-sm text-muted-foreground text-center">
-            First time: ~200MB download (Math + Text models). After that, works completely offline! ✨
+            First time: ~350MB download (2 Small Language Models). After that, works completely offline! ✨
           </p>
           <p className="text-xs text-muted-foreground text-center mt-2 opacity-70">
-            Running in CPU mode for maximum compatibility
+            Running in CPU mode for maximum compatibility • Total: 159M parameters
           </p>
         </div>
       </div>

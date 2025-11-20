@@ -115,22 +115,14 @@ Answer:`;
             }
           });
           
-          // Format for Qwen chat with conversation context
-          const prompt = `<|im_start|>system
-You are AI Sathi, a friendly and patient tutor for Grade 5 NCERT Maths in India. 
-- Answer in simple language that a 10-year-old can understand
-- Use both English and Hindi terms when helpful
-- Keep responses short (3-5 sentences), encouraging, and grade-appropriate
-- When student asks "yes" or "explain", provide the explanation they're asking for
-- Use examples from daily life (rotis, rupees, cricket, etc)
-- Always be encouraging and supportive<|im_end|>
-<|im_start|>user
+          // Format for GPT-2 with conversation context
+          const prompt = `You are AI Sathi, a friendly tutor for Grade 5 NCERT Maths in India. Answer in simple language that a 10-year-old can understand. Keep responses short (3-5 sentences).
+
 Previous conversation:
 ${conversationContext}
 
-Current question: ${userMessage}<|im_end|>
-<|im_start|>assistant
-`;
+Student: ${userMessage}
+Teacher:`;
 
           const result = await textModel(prompt, {
             max_new_tokens: 250,
@@ -141,9 +133,10 @@ Current question: ${userMessage}<|im_end|>
           
           // Extract just the assistant's response
           let response = (result as any)[0].generated_text || "";
+          // Remove the prompt from the generated text
           response = response.replace(prompt, "").trim();
-          response = response.replace(/<\|im_end\|>/g, "").trim();
-          response = response.replace(/<\|im_start\|>/g, "").trim();
+          // Clean up any remaining artifacts
+          response = response.split("\n\n")[0].trim(); // Take first paragraph only
           
           // If response is too short or empty, provide a better fallback
           if (!response || response.length < 20) {
