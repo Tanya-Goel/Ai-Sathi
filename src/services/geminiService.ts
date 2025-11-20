@@ -9,8 +9,10 @@
  * Search for: "// 🔄 REPLACE WITH SLM" to find all integration points.
  */
 
-const GEMINI_API_KEY = "AIzaSyDR4pS7oHQYlRjwAdxEGLsbl2zpsLVfVQI"; // Temporary key
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || ""; // Get from environment variable
+const GEMINI_API_URL = GEMINI_API_KEY 
+  ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
+  : "";
 
 interface GeminiRequest {
   contents: {
@@ -35,6 +37,12 @@ interface GeminiResponse {
  * Generic Gemini API caller
  */
 async function callGemini(prompt: string): Promise<string> {
+  // If no API key is configured, return a helpful fallback message
+  if (!GEMINI_API_KEY || !GEMINI_API_URL) {
+    console.warn("⚠️ Gemini API key not configured. Using fallback responses.");
+    return getFallbackResponse(prompt);
+  }
+
   const requestBody: GeminiRequest = {
     contents: [
       {
@@ -57,16 +65,55 @@ async function callGemini(prompt: string): Promise<string> {
     });
 
     if (!response.ok) {
-      throw new Error(`Gemini API error: ${response.status}`);
+      console.error(`Gemini API error: ${response.status}`);
+      // Fall back to local responses if API fails
+      return getFallbackResponse(prompt);
     }
 
     const data: GeminiResponse = await response.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    return text.trim();
+    return text.trim() || getFallbackResponse(prompt);
   } catch (error) {
     console.error("Gemini API call failed:", error);
-    throw error;
+    // Return fallback response instead of throwing
+    return getFallbackResponse(prompt);
   }
+}
+
+/**
+ * Fallback responses when Gemini API is not available
+ */
+function getFallbackResponse(prompt: string): string {
+  const lowerPrompt = prompt.toLowerCase();
+  
+  // Math-related questions
+  if (lowerPrompt.includes("addition") || lowerPrompt.includes("add") || lowerPrompt.includes("जोड़")) {
+    return "Addition means putting numbers together! For example: 5 + 3 = 8. When we add, we count up from the first number. Try practicing with small numbers first and then move to bigger ones!";
+  }
+  
+  if (lowerPrompt.includes("subtraction") || lowerPrompt.includes("subtract") || lowerPrompt.includes("घटा")) {
+    return "Subtraction means taking away! For example: 8 - 3 = 5. We start with 8 and count backwards 3 times: 7, 6, 5. Practice with objects like marbles or stones to make it easier!";
+  }
+  
+  if (lowerPrompt.includes("multiplication") || lowerPrompt.includes("multiply") || lowerPrompt.includes("गुणा")) {
+    return "Multiplication is repeated addition! For example: 3 × 4 means adding 3 four times: 3 + 3 + 3 + 3 = 12. It's a quick way to add the same number many times!";
+  }
+  
+  // Science-related questions
+  if (lowerPrompt.includes("plant") || lowerPrompt.includes("पौधे")) {
+    return "Plants are amazing! They have roots that drink water, stems that carry it up, leaves that make food using sunlight, and flowers that make seeds. Plants need water, sunlight, and soil to grow healthy and strong!";
+  }
+  
+  if (lowerPrompt.includes("body") || lowerPrompt.includes("शरीर")) {
+    return "Our body has many important parts! Eyes help us see, ears help us hear, nose helps us smell, tongue helps us taste, and hands help us hold things. Each part has a special job to keep us healthy and happy!";
+  }
+  
+  if (lowerPrompt.includes("animal") || lowerPrompt.includes("जानवर")) {
+    return "There are many types of animals! Domestic animals like cows and chickens live with us. Wild animals like tigers and elephants live in forests. Water animals like fish live in rivers and seas. All animals need food, water, and shelter!";
+  }
+  
+  // General educational response
+  return "That's a great question! I'm here to help you learn. Let me explain: Every topic we study builds on what we already know. Try breaking the problem into smaller parts and practice step by step. If you need more help with a specific concept, feel free to ask more questions!";
 }
 
 // ============================================================
