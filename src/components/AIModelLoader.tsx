@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Loader2 } from "lucide-react";
-import { pipeline } from "@huggingface/transformers";
+import { pipeline, env } from "@huggingface/transformers";
 
 interface AIModelLoaderProps {
   onModelLoaded: (pipelines: { mathModel: any; textModel: any }) => void;
@@ -14,77 +14,88 @@ export const AIModelLoader = ({ onModelLoaded }: AIModelLoaderProps) => {
   useEffect(() => {
     const loadModel = async () => {
       try {
-        setStatus("Checking GPU availability...");
+        console.log("🚀 Starting model loading process...");
+        
+        // Force WASM backend for better compatibility (disable WebGPU to avoid errors)
+        env.backends.onnx.wasm.numThreads = 4;
+        env.allowLocalModels = false;
+        env.allowRemoteModels = true;
+        
+        setStatus("Preparing AI models (CPU mode)...");
         setProgress(10);
         
-        // Try WebGPU first, fallback to WASM
-        let device: "webgpu" | "wasm" = "wasm";
-        try {
-          if ("gpu" in navigator) {
-            await (navigator as any).gpu.requestAdapter();
-            device = "webgpu";
-            setStatus("WebGPU detected! Loading AI model...");
-          } else {
-            setStatus("Loading AI model (CPU mode)...");
-          }
-        } catch {
-          setStatus("Loading AI model (CPU mode)...");
-        }
-        
-        setProgress(25);
+        console.log("ℹ️ Using WASM backend for maximum compatibility");
+        setProgress(20);
         
         // Load Math Model - Specialized for mathematical reasoning
         // Using Flan-T5 Small (77M params) - excellent for math problems
-        setStatus("Downloading math model...");
+        console.log("📥 Loading Math Model (Flan-T5)...");
+        setStatus("Downloading math model (77MB)...");
         const mathModel = await pipeline(
           "text2text-generation",
           "Xenova/flan-t5-small",
           { 
-            device,
-            dtype: device === "webgpu" ? "fp32" : "q8",
+            device: "wasm",
+            dtype: "q8",
             progress_callback: (progress: any) => {
               if (progress.status === "progress" && progress.progress) {
-                setProgress(25 + (progress.progress * 0.3));
+                const mathProgress = 20 + (progress.progress * 30);
+                setProgress(mathProgress);
+                console.log(`Math model: ${Math.round(progress.progress * 100)}%`);
               }
             }
           }
         );
         
-        setProgress(55);
+        console.log("✅ Math Model loaded successfully!");
+        setProgress(50);
         
         // Load Text Model - For explanations and conversations
         // Using Qwen 2.5 0.5B - lightweight conversational model
-        setStatus("Downloading explanation model...");
+        console.log("📥 Loading Text Model (Qwen)...");
+        setStatus("Downloading explanation model (130MB)...");
         const textModel = await pipeline(
           "text-generation",
           "Xenova/Qwen2.5-0.5B-Instruct",
           { 
-            device,
-            dtype: device === "webgpu" ? "fp32" : "q8",
+            device: "wasm",
+            dtype: "q8",
             progress_callback: (progress: any) => {
               if (progress.status === "progress" && progress.progress) {
-                setProgress(55 + (progress.progress * 0.35));
+                const textProgress = 50 + (progress.progress * 45);
+                setProgress(textProgress);
+                console.log(`Text model: ${Math.round(progress.progress * 100)}%`);
               }
             }
           }
         );
         
+        console.log("✅ Text Model loaded successfully!");
         setProgress(95);
-        setStatus("Initializing offline mode...");
+        setStatus("Finalizing setup...");
         await new Promise(resolve => setTimeout(resolve, 500));
         
         setProgress(100);
-        setStatus(`Ready! Running on ${device === "webgpu" ? "GPU" : "CPU"} 🚀`);
+        setStatus("Ready! AI models loaded 🚀");
         
-        console.log("✅ Both models loaded successfully!");
-        console.log("Math Model:", mathModel);
-        console.log("Text Model:", textModel);
-        setTimeout(() => onModelLoaded({ mathModel, textModel }), 300);
+        console.log("✅ ALL MODELS READY!");
+        console.log("Math Model type:", typeof mathModel);
+        console.log("Text Model type:", typeof textModel);
+        
+        setTimeout(() => {
+          console.log("🎉 Passing models to parent component");
+          onModelLoaded({ mathModel, textModel });
+        }, 300);
+        
       } catch (error) {
-        console.error("❌ Error loading models:", error);
-        console.error("Error details:", JSON.stringify(error, null, 2));
-        setStatus(`Error: ${error instanceof Error ? error.message : 'Failed to load models'}. Using fallback mode.`);
-        // Still allow the app to work with rule-based responses
+        console.error("❌ ERROR LOADING MODELS:");
+        console.error(error);
+        
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        setStatus(`Error: ${errorMessage.substring(0, 80)}...`);
+        setProgress(0);
+        
+        console.log("⚠️ Falling back to rule-based responses");
         setTimeout(() => onModelLoaded({ mathModel: null, textModel: null }), 500);
       }
     };
@@ -111,6 +122,9 @@ export const AIModelLoader = ({ onModelLoaded }: AIModelLoaderProps) => {
         <div className="p-4 bg-card rounded-xl border border-border">
           <p className="text-sm text-muted-foreground text-center">
             First time: ~200MB download (Math + Text models). After that, works completely offline! ✨
+          </p>
+          <p className="text-xs text-muted-foreground text-center mt-2 opacity-70">
+            Running in CPU mode for maximum compatibility
           </p>
         </div>
       </div>
