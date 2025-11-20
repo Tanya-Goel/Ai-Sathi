@@ -67,7 +67,7 @@ const Subjects = () => {
       description: "Learn Hindi, English, Kannada",
       icon: Book,
       color: "learning" as const,
-      route: "/chat",
+      route: "/language-learning",
     },
   ];
 
@@ -136,7 +136,7 @@ const Subjects = () => {
               onClick={() => {
                 if (subject.route === "/chat") {
                   navigate(subject.route, { state: { pipeline: aiPipeline } });
-                } else if (subject.route === "/science-chapters" || subject.route === "/maths-chapters") {
+                } else if (subject.route === "/science-chapters" || subject.route === "/maths-chapters" || subject.route === "/language-learning") {
                   navigate(subject.route);
                 } else {
                   toast.info("Coming soon! Start with Maths for now.");
