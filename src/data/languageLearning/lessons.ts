@@ -1,7 +1,12 @@
 import { Lesson } from '@/types/languageLearning';
 import { vocabularyData } from './vocabulary';
+import { hindiAlphabetLessons } from './alphabetLessons';
 
+// Combine alphabet lessons with vocabulary lessons
+// Students will first learn the alphabet, then move to vocabulary
 export const hindiLessons: Lesson[] = [
+    ...hindiAlphabetLessons,
+    // Now the vocabulary lessons - renumber levels to continue from alphabet lessons
     {
         id: 'hindi-1',
         title: 'Greetings',
@@ -9,7 +14,7 @@ export const hindiLessons: Lesson[] = [
         description: 'Learn basic Hindi greetings',
         descriptionHindi: 'बुनियादी हिंदी अभिवादन सीखें',
         language: 'hi',
-        level: 1,
+        level: 15,
         vocabulary: vocabularyData.greetings,
         exercises: [
             {
@@ -37,7 +42,7 @@ export const hindiLessons: Lesson[] = [
                 }
             }
         ],
-        unlocked: true,
+        unlocked: false,
         completed: false,
         bestScore: 0
     },
@@ -48,7 +53,7 @@ export const hindiLessons: Lesson[] = [
         description: 'Learn to count from 1 to 5 in Hindi',
         descriptionHindi: 'हिंदी में 1 से 5 तक गिनना सीखें',
         language: 'hi',
-        level: 2,
+        level: 16,
         vocabulary: vocabularyData.numbers,
         exercises: [
             {
@@ -87,7 +92,7 @@ export const hindiLessons: Lesson[] = [
         description: 'Learn family member names in Hindi',
         descriptionHindi: 'हिंदी में परिवार के सदस्यों के नाम सीखें',
         language: 'hi',
-        level: 3,
+        level: 17,
         vocabulary: vocabularyData.family,
         exercises: [
             {

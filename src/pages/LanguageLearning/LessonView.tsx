@@ -15,6 +15,7 @@ const LessonView = () => {
     const [exerciseType, setExerciseType] = useState<'vocab-viewer' | 'matching'>('vocab-viewer');
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
     const [matchingPairs, setMatchingPairs] = useState<Array<{ left: string; right: string; id: string }>>([]);
+    const [originalPairs, setOriginalPairs] = useState<Array<{ left: string; right: string; id: string }>>([]);
     const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
     const [selectedRight, setSelectedRight] = useState<string | null>(null);
     const [matchedPairs, setMatchedPairs] = useState<string[]>([]);
@@ -37,13 +38,20 @@ const LessonView = () => {
     }, [lessonId]);
 
     const setupMatchingGame = (pairs: Array<{ left: string; right: string; id: string }>) => {
-        // Shuffle the pairs
+        // Store the original correct pairs for validation
+        setOriginalPairs(pairs);
+
+        // Shuffle left items for display
         const shuffledLeft = [...pairs].sort(() => Math.random() - 0.5);
+
+        // Shuffle right items independently for display
         const shuffledRight = [...pairs].sort(() => Math.random() - 0.5);
-        setMatchingPairs(pairs.map((p, i) => ({
-            left: shuffledLeft[i].left,
+
+        // Create display pairs (these are just for rendering, not for validation)
+        setMatchingPairs(shuffledLeft.map((p, i) => ({
+            left: p.left,
             right: shuffledRight[i].right,
-            id: p.id
+            id: `display-${i}` // This ID is just for React keys
         })));
     };
 
@@ -88,7 +96,8 @@ const LessonView = () => {
     };
 
     const checkMatch = (left: string, right: string) => {
-        const pair = matchingPairs.find(p => p.left === left && p.right === right);
+        // Check against the original correct pairs, not the shuffled display
+        const pair = originalPairs.find(p => p.left === left && p.right === right);
         if (pair && !matchedPairs.includes(pair.id)) {
             // Correct match!
             setMatchedPairs([...matchedPairs, pair.id]);
@@ -107,7 +116,7 @@ const LessonView = () => {
         setSelectedRight(null);
 
         // Check if all matched
-        if (matchedPairs.length + 1 === matchingPairs.length) {
+        if (matchedPairs.length + 1 === originalPairs.length) {
             setTimeout(() => {
                 if (lesson && currentExercise < lesson.exercises.length - 1) {
                     setCurrentExercise(currentExercise + 1);
@@ -292,7 +301,7 @@ const LessonView = () => {
                         Tap a word on the left, then tap its match on the right
                     </p>
                     <p className="text-sm text-muted-foreground mt-2">
-                        Score: {matchedPairs.length} / {matchingPairs.length}
+                        Score: {matchedPairs.length} / {originalPairs.length}
                     </p>
                 </div>
 
@@ -300,8 +309,9 @@ const LessonView = () => {
                     {/* Left Column */}
                     <div className="space-y-3">
                         {leftItems.map((item, index) => {
-                            const pair = matchingPairs.find(p => p.left === item);
-                            const isMatched = pair && matchedPairs.includes(pair.id);
+                            // Check if this item has been matched by looking in originalPairs
+                            const originalPair = originalPairs.find(p => p.left === item);
+                            const isMatched = originalPair && matchedPairs.includes(originalPair.id);
                             const isSelected = selectedLeft === item;
 
                             return (
@@ -309,10 +319,10 @@ const LessonView = () => {
                                     key={index}
                                     onClick={() => !isMatched && handleMatchingSelect(item, 'left')}
                                     className={`p-4 cursor-pointer transition-all ${isMatched
-                                            ? 'opacity-50 bg-success/10 border-success'
-                                            : isSelected
-                                                ? 'ring-2 ring-primary bg-primary/5 scale-105'
-                                                : 'hover:scale-105'
+                                        ? 'opacity-50 bg-success/10 border-success'
+                                        : isSelected
+                                            ? 'ring-2 ring-primary bg-primary/5 scale-105'
+                                            : 'hover:scale-105'
                                         }`}
                                 >
                                     <div className="flex items-center justify-between">
@@ -327,8 +337,9 @@ const LessonView = () => {
                     {/* Right Column */}
                     <div className="space-y-3">
                         {rightItems.map((item, index) => {
-                            const pair = matchingPairs.find(p => p.right === item);
-                            const isMatched = pair && matchedPairs.includes(pair.id);
+                            // Check if this item has been matched by looking in originalPairs
+                            const originalPair = originalPairs.find(p => p.right === item);
+                            const isMatched = originalPair && matchedPairs.includes(originalPair.id);
                             const isSelected = selectedRight === item;
 
                             return (
@@ -336,10 +347,10 @@ const LessonView = () => {
                                     key={index}
                                     onClick={() => !isMatched && handleMatchingSelect(item, 'right')}
                                     className={`p-4 cursor-pointer transition-all ${isMatched
-                                            ? 'opacity-50 bg-success/10 border-success'
-                                            : isSelected
-                                                ? 'ring-2 ring-primary bg-primary/5 scale-105'
-                                                : 'hover:scale-105'
+                                        ? 'opacity-50 bg-success/10 border-success'
+                                        : isSelected
+                                            ? 'ring-2 ring-primary bg-primary/5 scale-105'
+                                            : 'hover:scale-105'
                                         }`}
                                 >
                                     <div className="flex items-center justify-between">
