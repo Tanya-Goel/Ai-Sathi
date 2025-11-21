@@ -7,11 +7,12 @@
  * When your SLM is ready, replace functions in this file with your local model calls.
  * 
  * Search for: "// 🔄 REPLACE WITH SLM" to find all integration points.
+
  */
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || ""; // Get from environment variable
 const GEMINI_API_URL = GEMINI_API_KEY 
-  ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
+  ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`
   : "";
 
 interface GeminiRequest {
@@ -40,6 +41,7 @@ async function callGemini(prompt: string): Promise<string> {
   // If no API key is configured, return a helpful fallback message
   if (!GEMINI_API_KEY || !GEMINI_API_URL) {
     console.warn("⚠️ Gemini API key not configured. Using fallback responses.");
+    console.warn("💡 Make sure VITE_GEMINI_API_KEY is set in your .env file");
     return getFallbackResponse(prompt);
   }
 
@@ -56,6 +58,7 @@ async function callGemini(prompt: string): Promise<string> {
   };
 
   try {
+    console.log("📡 Calling Gemini API...");
     const response = await fetch(GEMINI_API_URL, {
       method: "POST",
       headers: {
@@ -65,16 +68,24 @@ async function callGemini(prompt: string): Promise<string> {
     });
 
     if (!response.ok) {
-      console.error(`Gemini API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`❌ Gemini API error: ${response.status} - ${errorText}`);
       // Fall back to local responses if API fails
       return getFallbackResponse(prompt);
     }
 
     const data: GeminiResponse = await response.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    return text.trim() || getFallbackResponse(prompt);
+    
+    if (text.trim()) {
+      console.log("✅ Gemini API response received");
+      return text.trim();
+    } else {
+      console.warn("⚠️ Empty response from Gemini, using fallback");
+      return getFallbackResponse(prompt);
+    }
   } catch (error) {
-    console.error("Gemini API call failed:", error);
+    console.error("❌ Gemini API call failed:", error);
     // Return fallback response instead of throwing
     return getFallbackResponse(prompt);
   }

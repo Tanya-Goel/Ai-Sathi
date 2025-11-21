@@ -2,11 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { ChatMessage } from "@/components/ChatMessage";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Send } from "lucide-react";
+import { ArrowLeft, Send, Mic, Volume2, VolumeX } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { getTutoringResponse, evaluateMathExpression } from "@/services/geminiService";
+import { getTutoringResponse } from "@/services/geminiService";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { useVoiceInput } from "@/hooks/useVoiceInput";
 
 interface Message {
   role: "user" | "assistant";
@@ -36,9 +38,19 @@ const Chat = () => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [currentModel, setCurrentModel] = useState<"math" | "text" | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const hasProcessedInitialQuestion = useRef(false);
+
+  // Text-to-Speech and Voice Input hooks
+  const { isSpeaking, speak, stop, isSupported: ttsSupported } = useTextToSpeech(language);
+  const { 
+    isRecording, 
+    transcript, 
+    startRecording, 
+    stopRecording, 
+    clearTranscript,
+    isSupported: sttSupported 
+  } = useVoiceInput(language);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -47,6 +59,27 @@ const Chat = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Handle voice input transcript
+  useEffect(() => {
+    if (transcript && transcript.trim()) {
+      setInput(transcript);
+      clearTranscript();
+      toast.success(tutoringLanguage === "hindi" ? "आवाज़ पहचानी गई!" : "Voice recognized!");
+    }
+  }, [transcript, clearTranscript, tutoringLanguage]);
+
+  // Auto-speak the last AI message
+  useEffect(() => {
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.role === "assistant" && !isLoading) {
+        // Auto-speak AI responses
+        speak(lastMessage.content);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages, isLoading]);
 
   // Handle initial question from card context
   useEffect(() => {
@@ -74,114 +107,26 @@ const Chat = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuestion]);
 
-  // Determine if question is math-related
-  const isMathQuestion = (message: string): boolean => {
-    const lowerMessage = message.toLowerCase();
-    
-    // Check for math operations or numbers
-    if (/\d+\s*[\+\-\*×÷\/]\s*\d+/.test(message)) return true;
-    
-    // Check for math keywords
-    const mathKeywords = [
-      'add', 'addition', 'plus', 'sum', 'जोड़', 'total',
-      'subtract', 'subtraction', 'minus', 'difference', 'घटा', 'take away',
-      'multiply', 'multiplication', 'times', 'product', 'गुणा',
-      'divide', 'division', 'भाग', 'quotient',
-      'fraction', 'भिन्न', 'half', 'quarter', 'third',
-      'calculate', 'solve', 'answer', 'equal', '=',
-      'number', 'digit', 'place value', 'tens', 'hundreds', 'ones',
-      'greater', 'less', 'compare', 'bigger', 'smaller'
-    ];
-    
-    return mathKeywords.some(keyword => lowerMessage.includes(keyword));
-  };
-
   const getAIResponse = async (userMessage: string): Promise<string> => {
     // 🔄 USING GEMINI (temporary - will replace with local SLM later)
     console.log("🤖 Using Gemini API for tutoring");
     
-    try {
-      // Build chat history for context
-      const chatHistory = messages.slice(-4).map(msg => ({
-        role: msg.role,
-        content: msg.content,
-      }));
+    // Build chat history for context
+    const chatHistory = messages.slice(-4).map(msg => ({
+      role: msg.role,
+      content: msg.content,
+    }));
 
-      // Call Gemini tutoring service
-      const response = await getTutoringResponse({
-        subject,
-        chapter,
-        language: tutoringLanguage,
-        userQuestion: userMessage,
-        chatHistory,
-      });
+    // Call Gemini tutoring service - no fallbacks, pure AI
+    const response = await getTutoringResponse({
+      subject,
+      chapter,
+      language: tutoringLanguage,
+      userQuestion: userMessage,
+      chatHistory,
+    });
 
-      return response;
-    } catch (error) {
-      console.error("Gemini API error:", error);
-      // Fall through to local fallback
-    }
-    
-    // Fallback: Rule-based responses (when models aren't loaded)
-    const lowerMessage = userMessage.toLowerCase();
-    
-    // Check if asking for explanation after a calculation
-    if ((lowerMessage === "yes" || lowerMessage.includes("explain") || lowerMessage.includes("how")) && messages.length >= 2) {
-      const lastAssistant = messages[messages.length - 1];
-      if (lastAssistant.role === "assistant" && lastAssistant.content.includes("answer is:")) {
-        // Extract the calculation from previous messages
-        const lastUser = messages[messages.length - 2];
-        const calcMatch = lastUser.content.match(/(\d+)\s*([\+\-\*\/×÷])\s*(\d+)/);
-        if (calcMatch) {
-          const [, a, op, b] = calcMatch;
-          const operations = {
-            '+': { name: 'Addition', hindi: 'जोड़', explain: `we put ${a} and ${b} together` },
-            '-': { name: 'Subtraction', hindi: 'घटाना', explain: `we take away ${b} from ${a}` },
-            '*': { name: 'Multiplication', hindi: 'गुणा', explain: `we add ${a}, ${b} times` },
-            '×': { name: 'Multiplication', hindi: 'गुणा', explain: `we add ${a}, ${b} times` },
-            '/': { name: 'Division', hindi: 'भाग', explain: `we split ${a} into ${b} equal parts` },
-            '÷': { name: 'Division', hindi: 'भाग', explain: `we split ${a} into ${b} equal parts` },
-          };
-          const opInfo = operations[op as keyof typeof operations];
-          if (opInfo) {
-            return `Great! Let me explain how we solve ${a} ${op} ${b}:\n\n${opInfo.name} (${opInfo.hindi}) means ${opInfo.explain}.\n\n${lastUser.content} = ${eval(`${a}${op.replace('×','*').replace('÷','/')}${b}`)}\n\nDo you understand now? Feel free to ask more questions! 😊`;
-          }
-        }
-      }
-    }
-    
-    if (lowerMessage.includes("add") || lowerMessage.includes("plus") || lowerMessage.includes("जोड़")) {
-      return "Great! Let's learn addition (जोड़ना).\n\nWhen we add numbers, we put them together. For example:\n5 + 3 = 8\n\nTry this: What is 12 + 7?";
-    }
-    
-    if (lowerMessage.includes("multiply") || lowerMessage.includes("times") || lowerMessage.includes("गुणा")) {
-      return "Wonderful! Multiplication (गुणा) is repeated addition.\n\nFor example: 4 × 3 means adding 4 three times:\n4 + 4 + 4 = 12\n\nSo 4 × 3 = 12\n\nTry: What is 5 × 6?";
-    }
-    
-    if (lowerMessage.includes("fraction") || lowerMessage.includes("half") || lowerMessage.includes("भिन्न")) {
-      return "Fractions (भिन्न) show parts of a whole!\n\n1/2 means one part out of two equal parts (half)\n1/4 means one part out of four equal parts (quarter)\n\nIf you have 1 roti and cut it into 4 equal pieces, each piece is 1/4 of the roti! 🍞\n\nWhat fraction questions do you have?";
-    }
-    
-    if (/\d+\s*[\+\-\*\/×÷]\s*\d+/.test(userMessage)) {
-      try {
-        const cleanExpr = userMessage.replace(/[^\d\+\-\*\/\(\)×÷]/g, '').replace(/×/g, '*').replace(/÷/g, '/');
-        const result = eval(cleanExpr);
-        return `Great question! Let me help you solve this step by step.\n\nThe answer is: ${result}\n\nWould you like me to explain how we got this answer?`;
-      } catch {
-        return "I can help you with that! Can you write it in this format: number + number (like 5 + 3)?";
-      }
-    }
-    
-    if (lowerMessage.includes("help") || lowerMessage.includes("मदद")) {
-      return "I'm here to help you learn! 🌟\n\nI can teach you:\n• Addition (जोड़ना)\n• Subtraction (घटाना)\n• Multiplication (गुणा)\n• Division (भाग)\n• Fractions (भिन्न)\n\nJust ask me about any topic or give me a math problem to solve!";
-    }
-    
-    // Check for general questions like "yes", "no", "ok", etc.
-    if (/^(yes|yeah|ok|okay|sure|no|nah)$/i.test(lowerMessage.trim())) {
-      return "I'm here to help! What would you like to learn about? You can ask me:\n• Math problems (like 5 + 3)\n• Concepts (like 'what is multiplication?')\n• Explanations (like 'explain fractions')\n\nGo ahead, I'm listening! 😊";
-    }
-    
-    return "That's a great question! I can help you with Grade 5 Maths topics like addition, subtraction, multiplication, division, and fractions. What would you like to learn about? 📚";
+    return response;
   };
 
   const handleSend = async () => {
@@ -193,14 +138,18 @@ const Chat = () => {
     setIsLoading(true);
 
     try {
+      console.log("📤 Sending message to AI:", userMessage.content);
+      
       // Simulate processing delay
       await new Promise(resolve => setTimeout(resolve, 800));
       
       const aiResponse = await getAIResponse(userMessage.content);
+      console.log("📥 Received response from AI");
+      
       const assistantMessage: Message = { role: "assistant", content: aiResponse };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
-      console.error("Error getting response:", error);
+      console.error("❌ Error getting response:", error);
       toast.error("Sorry, I had trouble understanding. Please try again!");
     } finally {
       setIsLoading(false);
@@ -227,10 +176,14 @@ const Chat = () => {
           <ArrowLeft className="w-5 h-5" />
         </Button>
         <div className="flex-1">
-          <h1 className="font-semibold text-foreground">AI Sathi</h1>
+          <h1 className="font-semibold text-foreground flex items-center gap-2">
+            AI Sathi
+            {sttSupported && <Mic className="w-4 h-4 text-primary" />}
+            {ttsSupported && <Volume2 className="w-4 h-4 text-primary" />}
+          </h1>
           <p className="text-xs text-success flex items-center gap-1">
             <span className="w-2 h-2 bg-success rounded-full animate-pulse"></span>
-            🤖 Gemini AI (Prototype)
+            🤖 Gemini AI {(sttSupported || ttsSupported) && "• Voice Enabled"}
           </p>
         </div>
       </div>
@@ -238,11 +191,40 @@ const Chat = () => {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {/* Info Banner */}
-        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl">
+        <div className="p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-700 rounded-xl">
           <p className="text-xs text-blue-700 dark:text-blue-300">
-            ✨ Using Gemini AI (temporary prototype). Will replace with local SLM soon!
+            🤖 Powered by Gemini AI - All responses are generated by AI
+            {(sttSupported || ttsSupported) && (
+              <span className="ml-2">
+                {sttSupported && "🎤"} {ttsSupported && "🔊"}
+              </span>
+            )}
           </p>
         </div>
+
+        {/* Recording indicator */}
+        {isRecording && (
+          <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl animate-pulse">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              <p className="text-sm text-red-700 dark:text-red-300 font-medium">
+                {tutoringLanguage === "hindi" ? "रिकॉर्डिंग चल रही है... बोलें" : "Recording... Speak now"}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Speaking indicator */}
+        {isSpeaking && (
+          <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl">
+            <div className="flex items-center gap-2">
+              <Volume2 className="w-4 h-4 text-green-700 dark:text-green-300 animate-pulse" />
+              <p className="text-xs text-green-700 dark:text-green-300">
+                {tutoringLanguage === "hindi" ? "बोल रहा हूँ..." : "Speaking..."}
+              </p>
+            </div>
+          </div>
+        )}
         
         {messages.map((message, index) => (
           <ChatMessage key={index} role={message.role} content={message.content} />
@@ -259,14 +241,55 @@ const Chat = () => {
 
       {/* Input */}
       <div className="bg-card border-t border-border p-4">
+        {/* Voice controls */}
+        <div className="flex gap-2 mb-3 justify-end">
+          {ttsSupported && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={isSpeaking ? stop : () => speak(messages[messages.length - 1]?.content || "")}
+              disabled={messages.length <= 1}
+              className="rounded-xl"
+            >
+              {isSpeaking ? (
+                <>
+                  <VolumeX className="w-4 h-4 mr-2" />
+                  {tutoringLanguage === "hindi" ? "बंद करें" : "Stop"}
+                </>
+              ) : (
+                <>
+                  <Volume2 className="w-4 h-4 mr-2" />
+                  {tutoringLanguage === "hindi" ? "फिर से सुनें" : "Read Last"}
+                </>
+              )}
+            </Button>
+          )}
+        </div>
+
         <div className="flex gap-2">
+          {sttSupported && (
+            <Button
+              variant={isRecording ? "destructive" : "outline"}
+              size="icon"
+              onClick={isRecording ? stopRecording : startRecording}
+              disabled={isLoading}
+              className="h-[60px] w-[60px] rounded-2xl"
+              title={isRecording ? "Stop recording" : "Voice input"}
+            >
+              <Mic className={`w-5 h-5 ${isRecording ? 'animate-pulse' : ''}`} />
+            </Button>
+          )}
           <Textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Ask me anything about maths..."
+            placeholder={
+              isRecording 
+                ? (tutoringLanguage === "hindi" ? "सुन रहा हूँ..." : "Listening...")
+                : (tutoringLanguage === "hindi" ? "गणित के बारे में कुछ भी पूछें..." : "Ask me anything about maths...")
+            }
             className="min-h-[60px] max-h-[120px] resize-none rounded-2xl"
-            disabled={isLoading}
+            disabled={isLoading || isRecording}
           />
           <Button
             onClick={handleSend}
