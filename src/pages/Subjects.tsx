@@ -123,10 +123,7 @@ const Subjects = () => {
               icon={subject.icon}
               color={subject.color}
               onClick={() => {
-                if (subject.route === "/chat") {
-                  navigate(subject.route, { state: { pipeline: aiPipeline } });
-                } else if (subject.route === "/science-chapters" || subject.route === "/maths-chapters" || subject.route === "/language-learning") {
-                if (subject.route === "/science-chapters" || subject.route === "/maths-chapters" || subject.route === "/chat") {
+                if (subject.route === "/science-chapters" || subject.route === "/maths-chapters" || subject.route === "/language-learning") {
                   navigate(subject.route);
                 } else {
                   toast.info("Coming soon! Start with Maths for now.");
