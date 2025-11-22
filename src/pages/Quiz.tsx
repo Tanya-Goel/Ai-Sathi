@@ -34,6 +34,8 @@ export default function Quiz() {
   const [feedback, setFeedback] = useState<{ correct: boolean; message: string } | null>(null);
   const [lives, setLives] = useState(5);
   const [score, setScore] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [wrongAnswers, setWrongAnswers] = useState(0);
   const [streak, setStreak] = useState(0);
   const [loading, setLoading] = useState(true);
   const [quizComplete, setQuizComplete] = useState(false);
@@ -90,10 +92,12 @@ export default function Quiz() {
 
       if (result.correct) {
         setScore(score + 10);
+        setCorrectAnswers(correctAnswers + 1);
         setStreak(streak + 1);
         const lang = language === "hindi" ? "hi-IN" : "en-US";
         play(result.encouragement, lang).catch(console.error);
       } else {
+        setWrongAnswers(wrongAnswers + 1);
         setLives(lives - 1);
         setStreak(0);
         if (lives <= 1) {
@@ -127,6 +131,8 @@ export default function Quiz() {
     setFeedback(null);
     setLives(5);
     setScore(0);
+    setCorrectAnswers(0);
+    setWrongAnswers(0);
     setStreak(0);
     setQuizComplete(false);
     loadQuestions();
@@ -153,8 +159,9 @@ export default function Quiz() {
   }
 
   if (quizComplete) {
-    const finalScore = questions.length > 0 
-      ? Math.round((score / (questions.length * 10)) * 100) 
+    const totalAttempted = correctAnswers + wrongAnswers;
+    const finalScore = totalAttempted > 0 
+      ? Math.round((correctAnswers / totalAttempted) * 100) 
       : 0;
     return (
       <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-white flex items-center justify-center p-4">
@@ -175,18 +182,21 @@ export default function Quiz() {
                 <span className="font-semibold">Final Score:</span>
                 <span className="text-3xl font-bold text-blue-600">{finalScore}%</span>
               </div>
+              <div className="text-center mt-2 text-sm text-gray-600">
+                {correctAnswers} out of {totalAttempted} correct
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 bg-green-50 rounded-lg text-center">
                 <CheckCircle2 className="h-6 w-6 text-green-500 mx-auto mb-1" />
                 <p className="text-sm font-semibold">Correct</p>
-                <p className="text-2xl font-bold">{Math.round(score / 10)}</p>
+                <p className="text-2xl font-bold">{correctAnswers}</p>
               </div>
               <div className="p-3 bg-red-50 rounded-lg text-center">
                 <XCircle className="h-6 w-6 text-red-500 mx-auto mb-1" />
                 <p className="text-sm font-semibold">Wrong</p>
-                <p className="text-2xl font-bold">{questions.length - Math.round(score / 10)}</p>
+                <p className="text-2xl font-bold">{wrongAnswers}</p>
               </div>
             </div>
           </div>

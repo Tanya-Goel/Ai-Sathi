@@ -39,7 +39,7 @@ export interface EnglishExercise {
 export const englishLetters: EnglishLetter[] = [
     {
         id: 'A',
-        letter: 'Aa',
+        letter: 'A',
         uppercase: 'A',
         lowercase: 'a',
         pronunciation: 'ए',
@@ -53,7 +53,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'B',
-        letter: 'Bb',
+        letter: 'B',
         uppercase: 'B',
         lowercase: 'b',
         pronunciation: 'बी',
@@ -67,7 +67,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'C',
-        letter: 'Cc',
+        letter: 'C',
         uppercase: 'C',
         lowercase: 'c',
         pronunciation: 'सी',
@@ -81,7 +81,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'D',
-        letter: 'Dd',
+        letter: 'D',
         uppercase: 'D',
         lowercase: 'd',
         pronunciation: 'डी',
@@ -95,7 +95,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'E',
-        letter: 'Ee',
+        letter: 'E',
         uppercase: 'E',
         lowercase: 'e',
         pronunciation: 'ई',
@@ -109,7 +109,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'F',
-        letter: 'Ff',
+        letter: 'F',
         uppercase: 'F',
         lowercase: 'f',
         pronunciation: 'एफ',
@@ -123,7 +123,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'G',
-        letter: 'Gg',
+        letter: 'G',
         uppercase: 'G',
         lowercase: 'g',
         pronunciation: 'जी',
@@ -137,7 +137,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'H',
-        letter: 'Hh',
+        letter: 'H',
         uppercase: 'H',
         lowercase: 'h',
         pronunciation: 'एच',
@@ -151,7 +151,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'I',
-        letter: 'Ii',
+        letter: 'I',
         uppercase: 'I',
         lowercase: 'i',
         pronunciation: 'आई',
@@ -165,7 +165,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'J',
-        letter: 'Jj',
+        letter: 'J',
         uppercase: 'J',
         lowercase: 'j',
         pronunciation: 'जे',
@@ -179,7 +179,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'K',
-        letter: 'Kk',
+        letter: 'K',
         uppercase: 'K',
         lowercase: 'k',
         pronunciation: 'के',
@@ -193,7 +193,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'L',
-        letter: 'Ll',
+        letter: 'L',
         uppercase: 'L',
         lowercase: 'l',
         pronunciation: 'एल',
@@ -207,7 +207,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'M',
-        letter: 'Mm',
+        letter: 'M',
         uppercase: 'M',
         lowercase: 'm',
         pronunciation: 'एम',
@@ -221,7 +221,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'N',
-        letter: 'Nn',
+        letter: 'N',
         uppercase: 'N',
         lowercase: 'n',
         pronunciation: 'एन',
@@ -235,7 +235,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'O',
-        letter: 'Oo',
+        letter: 'O',
         uppercase: 'O',
         lowercase: 'o',
         pronunciation: 'ओ',
@@ -249,7 +249,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'P',
-        letter: 'Pp',
+        letter: 'P',
         uppercase: 'P',
         lowercase: 'p',
         pronunciation: 'पी',
@@ -263,7 +263,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'Q',
-        letter: 'Qq',
+        letter: 'Q',
         uppercase: 'Q',
         lowercase: 'q',
         pronunciation: 'क्यू',
@@ -277,7 +277,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'R',
-        letter: 'Rr',
+        letter: 'R',
         uppercase: 'R',
         lowercase: 'r',
         pronunciation: 'आर',
@@ -291,7 +291,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'S',
-        letter: 'Ss',
+        letter: 'S',
         uppercase: 'S',
         lowercase: 's',
         pronunciation: 'एस',
@@ -305,7 +305,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'T',
-        letter: 'Tt',
+        letter: 'T',
         uppercase: 'T',
         lowercase: 't',
         pronunciation: 'टी',
@@ -319,7 +319,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'U',
-        letter: 'Uu',
+        letter: 'U',
         uppercase: 'U',
         lowercase: 'u',
         pronunciation: 'यू',
@@ -333,7 +333,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'V',
-        letter: 'Vv',
+        letter: 'V',
         uppercase: 'V',
         lowercase: 'v',
         pronunciation: 'वी',
@@ -347,7 +347,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'W',
-        letter: 'Ww',
+        letter: 'W',
         uppercase: 'W',
         lowercase: 'w',
         pronunciation: 'डब्लू',
@@ -361,7 +361,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'X',
-        letter: 'Xx',
+        letter: 'X',
         uppercase: 'X',
         lowercase: 'x',
         pronunciation: 'एक्स',
@@ -375,7 +375,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'Y',
-        letter: 'Yy',
+        letter: 'Y',
         uppercase: 'Y',
         lowercase: 'y',
         pronunciation: 'वाई',
@@ -389,7 +389,7 @@ export const englishLetters: EnglishLetter[] = [
     },
     {
         id: 'Z',
-        letter: 'Zz',
+        letter: 'Z',
         uppercase: 'Z',
         lowercase: 'z',
         pronunciation: 'जेड',
