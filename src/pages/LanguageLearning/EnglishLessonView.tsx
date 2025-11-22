@@ -154,7 +154,7 @@ export default function EnglishLessonView() {
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate('/language-learning/english-course')}
+                    onClick={() => navigate(-1)}
                     className="rounded-full"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />

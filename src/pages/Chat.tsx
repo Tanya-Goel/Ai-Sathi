@@ -19,15 +19,15 @@ const Chat = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { language } = useLanguage();
-  
+
   // Get subject, chapter, and initial question from location state
   const subject = (location.state as { subject?: string })?.subject || "Maths";
   const chapter = (location.state as { chapter?: string })?.chapter || "General";
   const initialQuestion = (location.state as { initialQuestion?: string })?.initialQuestion;
-  
+
   // Map language context to tutoring language
   const tutoringLanguage = language === "hi" ? "hindi" : language === "kn" ? "english" : "english";
-  
+
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -43,13 +43,13 @@ const Chat = () => {
 
   // Text-to-Speech and Voice Input hooks
   const { isSpeaking, speak, stop, isSupported: ttsSupported } = useTextToSpeech(language);
-  const { 
-    isRecording, 
-    transcript, 
-    startRecording, 
-    stopRecording, 
+  const {
+    isRecording,
+    transcript,
+    startRecording,
+    stopRecording,
     clearTranscript,
-    isSupported: sttSupported 
+    isSupported: sttSupported
   } = useVoiceInput(language);
 
   const scrollToBottom = () => {
@@ -110,7 +110,7 @@ const Chat = () => {
   const getAIResponse = async (userMessage: string): Promise<string> => {
     // 🔄 USING GEMINI (temporary - will replace with local SLM later)
     console.log("🤖 Using Gemini API for tutoring");
-    
+
     // Build chat history for context
     const chatHistory = messages.slice(-4).map(msg => ({
       role: msg.role,
@@ -139,13 +139,13 @@ const Chat = () => {
 
     try {
       console.log("📤 Sending message to AI:", userMessage.content);
-      
+
       // Simulate processing delay
       await new Promise(resolve => setTimeout(resolve, 800));
-      
+
       const aiResponse = await getAIResponse(userMessage.content);
       console.log("📥 Received response from AI");
-      
+
       const assistantMessage: Message = { role: "assistant", content: aiResponse };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
@@ -170,7 +170,7 @@ const Chat = () => {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate("/")}
+          onClick={() => navigate(-1)}
           className="rounded-full"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -225,7 +225,7 @@ const Chat = () => {
             </div>
           </div>
         )}
-        
+
         {messages.map((message, index) => (
           <ChatMessage key={index} role={message.role} content={message.content} />
         ))}
@@ -284,7 +284,7 @@ const Chat = () => {
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder={
-              isRecording 
+              isRecording
                 ? (tutoringLanguage === "hindi" ? "सुन रहा हूँ..." : "Listening...")
                 : (tutoringLanguage === "hindi" ? "गणित के बारे में कुछ भी पूछें..." : "Ask me anything about maths...")
             }

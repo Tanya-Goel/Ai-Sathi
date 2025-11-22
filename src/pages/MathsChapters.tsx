@@ -27,7 +27,7 @@ const MathsChapters = () => {
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate("/subjects")}
+                    onClick={() => navigate(-1)}
                     className="rounded-full hover:bg-muted"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />
@@ -59,7 +59,7 @@ const MathsChapters = () => {
                         <h2 className="text-xl font-bold mb-3">
                             {language === "hi" ? chapter.titleHindi : chapter.title}
                         </h2>
-                        
+
                         <div className="space-y-3">
                             {chapter.lessons.map((lesson, index) => (
                                 <Card
@@ -72,7 +72,7 @@ const MathsChapters = () => {
                                         <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
                                             {index + 1}
                                         </div>
-                                        
+
                                         {/* Lesson Info */}
                                         <div className="flex-1">
                                             <h3 className="font-semibold text-lg">
@@ -91,7 +91,7 @@ const MathsChapters = () => {
                                                 </span>
                                             </div>
                                         </div>
-                                        
+
                                         {/* Play Button */}
                                         <PlayCircle className="w-8 h-8 text-blue-500" />
                                     </div>

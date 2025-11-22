@@ -52,7 +52,7 @@ export default function HindiCourse() {
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate('/language-learning')}
+                    onClick={() => navigate(-1)}
                     className="rounded-full"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />
@@ -88,18 +88,18 @@ export default function HindiCourse() {
                         <Card
                             key={lesson.id}
                             className={`p-6 transition-all ${isLocked
-                                    ? 'opacity-50 cursor-not-allowed'
-                                    : 'cursor-pointer hover:shadow-lg'
+                                ? 'opacity-50 cursor-not-allowed'
+                                : 'cursor-pointer hover:shadow-lg'
                                 }`}
                             onClick={() => handleLessonClick(lesson)}
                         >
                             <div className="flex items-center gap-4">
                                 {/* Level Badge */}
                                 <div className={`w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 ${isCompleted
-                                        ? 'bg-green-100'
-                                        : isLocked
-                                            ? 'bg-gray-100'
-                                            : 'bg-gradient-to-br from-orange-500 to-red-500'
+                                    ? 'bg-green-100'
+                                    : isLocked
+                                        ? 'bg-gray-100'
+                                        : 'bg-gradient-to-br from-orange-500 to-red-500'
                                     }`}>
                                     {isCompleted ? (
                                         <CheckCircle2 className="w-8 h-8 text-green-600" />

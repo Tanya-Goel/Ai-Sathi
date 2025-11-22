@@ -7,7 +7,7 @@
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Lock } from "lucide-react";
+import { BookOpen, Lock, ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ClassOption {
@@ -90,7 +90,16 @@ const ClassSelection = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-blue-50 via-purple-50 to-pink-50">
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 via-purple-50 to-pink-50 relative">
+            {/* Back Button */}
+            <button
+                onClick={() => navigate("/language-onboarding")}
+                className="absolute top-4 left-4 md:top-8 md:left-8 p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all hover:scale-110 z-10 group"
+                aria-label="Go back"
+            >
+                <ArrowLeft className="w-6 h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
+            </button>
+
             <div className="max-w-4xl mx-auto px-4 py-12">
                 {/* Header with Teacher Mascot */}
                 <div className="text-center mb-12">
@@ -142,8 +151,8 @@ const ClassSelection = () => {
                         <Card
                             key={classOption.id}
                             className={`relative p-6 transition-all cursor-pointer ${classOption.enabled
-                                    ? "hover:shadow-lg hover:scale-105 border-2 border-blue-200 bg-white"
-                                    : "opacity-50 cursor-not-allowed bg-gray-50 border border-gray-200"
+                                ? "hover:shadow-lg hover:scale-105 border-2 border-blue-200 bg-white"
+                                : "opacity-50 cursor-not-allowed bg-gray-50 border border-gray-200"
                                 }`}
                             onClick={() => handleClassSelect(classOption.id, classOption.enabled)}
                         >
@@ -158,16 +167,16 @@ const ClassSelection = () => {
                             <div className="text-center mb-3">
                                 <div
                                     className={`text-5xl font-bold mb-2 ${classOption.enabled
-                                            ? "text-blue-600"
-                                            : "text-gray-400"
+                                        ? "text-blue-600"
+                                        : "text-gray-400"
                                         }`}
                                 >
                                     {classOption.id}
                                 </div>
                                 <p
                                     className={`text-sm font-semibold ${classOption.enabled
-                                            ? "text-gray-700"
-                                            : "text-gray-400"
+                                        ? "text-gray-700"
+                                        : "text-gray-400"
                                         }`}
                                 >
                                     {getText("class")} {classOption.id}
