@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="coverGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#c0392b;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#e74c3c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c0392b;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="pageGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ecf0f1;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ecf0f1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Back Cover -->
+  <path d="M5 80 Q 50 90 95 80 L 95 85 Q 50 95 5 85 Z" fill="#8e241b" />
+  
+  <!-- Pages Block -->
+  <path d="M10 25 Q 50 35 90 25 L 90 80 Q 50 90 10 80 Z" fill="url(#pageGrad)" />
+  
+  <!-- Spine Crease -->
+  <line x1="50" y1="25" x2="50" y2="85" stroke="#bdc3c7" stroke-width="1" opacity="0.5" />
+  
+  <!-- Text Lines Left -->
+  <path d="M15 35 Q 30 40 45 38" stroke="#333" stroke-width="1" stroke-linecap="round" opacity="0.3" />
+  <path d="M15 42 Q 30 47 45 45" stroke="#333" stroke-width="1" stroke-linecap="round" opacity="0.3" />
+  <path d="M15 49 Q 30 54 45 52" stroke="#333" stroke-width="1" stroke-linecap="round" opacity="0.3" />
+  <path d="M15 56 Q 30 61 45 59" stroke="#333" stroke-width="1" stroke-linecap="round" opacity="0.3" />
+  
+  <!-- Text Lines Right -->
+  <path d="M55 38 Q 70 40 85 35" stroke="#333" stroke-width="1" stroke-linecap="round" opacity="0.3" />
+  <path d="M55 45 Q 70 47 85 42" stroke="#333" stroke-width="1" stroke-linecap="round" opacity="0.3" />
+  <path d="M55 52 Q 70 54 85 49" stroke="#333" stroke-width="1" stroke-linecap="round" opacity="0.3" />
+  <path d="M55 59 Q 70 61 85 56" stroke="#333" stroke-width="1" stroke-linecap="round" opacity="0.3" />
+  
+  <!-- Cover Outline -->
+  <path d="M10 25 Q 50 35 90 25" fill="none" stroke="#c0392b" stroke-width="2" />
+  <path d="M10 80 Q 50 90 90 80" fill="none" stroke="#bdc3c7" stroke-width="1" />
+  
+  <!-- Hardcover Edges -->
+  <path d="M5 85 L 5 30 Q 50 40 95 30 L 95 85" fill="none" stroke="#c0392b" stroke-width="3" />
+  
+  <!-- Bookmark -->
+  <path d="M60 25 L 60 60 L 65 55 L 70 60 L 70 25" fill="#f1c40f" />
+</svg>

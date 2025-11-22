@@ -61,10 +61,18 @@ export default function PictureDictionary() {
                 <div className="px-6 pt-8 space-y-6">
                     {/* Picture */}
                     <Card className="p-8">
-                        <div className="w-64 h-64 mx-auto bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl flex items-center justify-center overflow-hidden">
-                            <div className="text-9xl">
-                                {getCategoryEmoji(selectedCategory?.id || '')}
-                            </div>
+                        <div className="w-full max-w-[16rem] aspect-square mx-auto bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl flex items-center justify-center overflow-hidden">
+                            {selectedCategory?.id === 'school' ? (
+                                <img
+                                    src={selectedItem.picture}
+                                    alt={selectedItem.english}
+                                    className="w-full h-full object-contain p-4"
+                                />
+                            ) : (
+                                <div className="text-9xl">
+                                    {getCategoryEmoji(selectedCategory?.id || '')}
+                                </div>
+                            )}
                         </div>
                     </Card>
 
@@ -190,10 +198,18 @@ export default function PictureDictionary() {
                             className="p-4 cursor-pointer hover:shadow-lg transition-all"
                             onClick={() => setSelectedItem(item)}
                         >
-                            <div className="aspect-square bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center mb-3">
-                                <div className="text-5xl">
-                                    {getCategoryEmoji(selectedCategory.id)}
-                                </div>
+                            <div className="aspect-square bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center mb-3 overflow-hidden">
+                                {selectedCategory.id === 'school' ? (
+                                    <img
+                                        src={item.picture}
+                                        alt={item.english}
+                                        className="w-full h-full object-contain p-2"
+                                    />
+                                ) : (
+                                    <div className="text-5xl">
+                                        {getCategoryEmoji(selectedCategory.id)}
+                                    </div>
+                                )}
                             </div>
                             <h3 className="text-lg font-bold text-center text-foreground mb-1">
                                 {item.english}
