@@ -134,7 +134,7 @@ const Subjects = () => {
         <div className="p-6 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-3xl border border-primary/20 space-y-4">
           <h3 className="font-semibold text-foreground">{t("Ready to Learn?")}</h3>
           <p className="text-sm text-muted-foreground">
-            {t("Start with Grade 5 Maths and ask me anything! I'll explain step-by-step in simple language.")}
+            {t("Ask me anything! I'll explain step-by-step in simple language.")}
           </p>
           <Button
             onClick={() => navigate("/chat")}

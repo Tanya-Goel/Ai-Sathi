@@ -24,7 +24,7 @@ export default function Quiz() {
   const location = useLocation();
   const { play, isPlaying } = useAudioPlayer();
   
-  const placement = (location.state as any)?.placement || "hindi-literacy";
+  const placement = (location.state as { placement?: string })?.placement || "hindi-literacy";
   const language = placement.includes("hindi") ? "hindi" : "english";
   
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -41,6 +41,7 @@ export default function Quiz() {
   // Load questions on mount
   useEffect(() => {
     loadQuestions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadQuestions = async () => {
@@ -132,7 +133,12 @@ export default function Quiz() {
   };
 
   const handleExit = () => {
-    navigate("/subjects");
+    // If this is a Hindi/English literacy quiz, go back to language learning
+    if (placement.includes("hindi") || placement.includes("english")) {
+      navigate("/language-learning");
+    } else {
+      navigate("/subjects");
+    }
   };
 
   if (loading) {
@@ -147,7 +153,9 @@ export default function Quiz() {
   }
 
   if (quizComplete) {
-    const finalScore = Math.round((score / (questions.length * 10)) * 100);
+    const finalScore = questions.length > 0 
+      ? Math.round((score / (questions.length * 10)) * 100) 
+      : 0;
     return (
       <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-white flex items-center justify-center p-4">
         <Card className="max-w-md w-full p-8 shadow-lg">
@@ -188,7 +196,9 @@ export default function Quiz() {
               Try Again 🔄
             </Button>
             <Button onClick={handleExit} variant="outline" className="w-full py-6 text-xl" size="lg">
-              Exit to Subjects
+              {placement.includes("hindi") || placement.includes("english") 
+                ? "Back to Language Learning" 
+                : "Exit to Subjects"}
             </Button>
           </div>
         </Card>

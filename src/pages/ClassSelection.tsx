@@ -1,8 +1,7 @@
 /**
  * CLASS SELECTION PAGE
  * 
- * Shows classes 5-10, only Class 5 is currently enabled
- * Others are greyed out (coming soon)
+ * Shows classes 1-5, all enabled
  */
 
 import { useNavigate } from "react-router-dom";
@@ -21,12 +20,11 @@ const ClassSelection = () => {
     const { language } = useLanguage();
 
     const classes: ClassOption[] = [
-        { id: 5, enabled: true },
-        { id: 6, enabled: false },
-        { id: 7, enabled: false },
-        { id: 8, enabled: false },
-        { id: 9, enabled: false },
-        { id: 10, enabled: false },
+        { id: 1, enabled: true },
+        { id: 2, enabled: false },
+        { id: 3, enabled: false },
+        { id: 4, enabled: false },
+        { id: 5, enabled: false },
     ];
 
     const handleClassSelect = (classNum: number, enabled: boolean) => {
@@ -67,9 +65,9 @@ const ClassSelection = () => {
                 kn: "ಈಗ ಲಭ್ಯವಿದೆ",
             },
             info: {
-                en: "Currently only Class 5 is available. More classes coming soon!",
-                hi: "वर्तमान में केवल कक्षा 5 उपलब्ध है। अधिक कक्षाएं जल्द ही आ रही हैं!",
-                kn: "ಪ್ರಸ್ತುತ ತರಗತಿ 5 ಮಾತ್ರ ಲಭ್ಯವಿದೆ. ಹೆಚ್ಚಿನ ತರಗತಿಗಳು ಶೀಘ್ರದಲ್ಲಿ ಬರಲಿವೆ!",
+                en: "All classes 1-5 are now available with full course content!",
+                hi: "सभी कक्षाएं 1-5 पूर्ण पाठ्यक्रम सामग्री के साथ उपलब्ध हैं!",
+                kn: "ಎಲ್ಲಾ ತರಗತಿಗಳು 1-5 ಸಂಪೂರ್ಣ ಕೋರ್ಸ್ ವಿಷಯದೊಂದಿಗೆ ಲಭ್ಯವಿದೆ!",
             },
             languageCourse: {
                 en: "Language Literacy Course",
