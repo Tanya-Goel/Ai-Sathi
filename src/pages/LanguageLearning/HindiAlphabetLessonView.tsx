@@ -113,7 +113,7 @@ export default function HindiAlphabetLessonView() {
     const renderExercise = () => {
         switch (currentExercise.type) {
             case 'introduction':
-                return <IntroductionExercise exercise={currentExercise} onNext={handleNext} playSound={playLetterSound} />;
+                return <IntroductionExercise exercise={currentExercise} onNext={handleNext} playSound={playLetterSound} playText={play} />;
 
             case 'listen-repeat':
                 return <ListenRepeatExercise exercise={currentExercise} onNext={handleNext} playSound={playLetterSound} />;
@@ -160,7 +160,7 @@ export default function HindiAlphabetLessonView() {
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate('/language-learning/alphabet-course')}
+                    onClick={() => navigate(-1)}
                     className="rounded-full"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />
@@ -201,10 +201,12 @@ function IntroductionExercise({
     exercise,
     onNext,
     playSound,
+    playText,
 }: {
     exercise: AlphabetExercise;
     onNext: () => void;
     playSound: (letterId: string) => void;
+    playText: (text: string, lang: string) => Promise<void>;
 }) {
     const letters = exercise.data.letters.map((id: string) => getLetterById(id)).filter(Boolean) as HindiLetter[];
 
@@ -242,13 +244,41 @@ function IntroductionExercise({
                         <div className="space-y-2">
                             <p className="text-sm font-semibold text-foreground">Examples:</p>
                             {letter.examples.map((example, idx) => (
-                                <div key={idx} className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
-                                    <span className="text-2xl">{example.picture}</span>
-                                    <div>
-                                        <p className="font-bold text-foreground">{example.word}</p>
-                                        <p className="text-sm text-muted-foreground">
-                                            {example.wordRoman} - {example.meaning}
-                                        </p>
+                                <div key={idx} className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-2xl">{example.picture}</span>
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <p className="font-bold text-foreground">{example.word}</p>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-6 w-6"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        playText(example.word, 'hi-IN');
+                                                    }}
+                                                >
+                                                    <Volume2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <p className="text-sm text-muted-foreground">
+                                                    {example.wordRoman} - {example.meaning}
+                                                </p>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-6 w-6"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        playText(example.meaning, 'en-IN');
+                                                    }}
+                                                >
+                                                    <Volume2 className="h-3 w-3" />
+                                                </Button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -631,14 +661,26 @@ function ReadingExercise({
                                     <p className="text-sm text-purple-600 mb-1">{item.roman}</p>
                                     <p className="text-sm text-muted-foreground">{item.meaning}</p>
                                 </div>
-                                <Button
-                                    size="lg"
-                                    variant="outline"
-                                    onClick={() => playSound(item.word, 'hi-IN')}
-                                    className="rounded-full"
-                                >
-                                    <Volume2 className="w-6 h-6" />
-                                </Button>
+                                <div className="flex flex-col gap-2">
+                                    <Button
+                                        size="lg"
+                                        variant="outline"
+                                        onClick={() => playSound(item.word, 'hi-IN')}
+                                        className="rounded-full"
+                                    >
+                                        <Volume2 className="w-6 h-6" />
+                                        <span className="sr-only">Play Hindi</span>
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => playSound(item.meaning, 'en-IN')}
+                                        className="rounded-full text-muted-foreground"
+                                    >
+                                        <Volume2 className="w-4 h-4 mr-1" />
+                                        Eng
+                                    </Button>
+                                </div>
                             </div>
                         </Card>
                     ))}
@@ -657,14 +699,25 @@ function ReadingExercise({
                                         <p className="text-sm text-purple-600 mb-1">{item.roman}</p>
                                         <p className="text-sm text-muted-foreground">{item.meaning}</p>
                                     </div>
-                                    <Button
-                                        size="lg"
-                                        variant="outline"
-                                        onClick={() => playSound(item.sentence, 'hi-IN')}
-                                        className="rounded-full flex-shrink-0"
-                                    >
-                                        <Volume2 className="w-6 h-6" />
-                                    </Button>
+                                    <div className="flex flex-col gap-2 flex-shrink-0">
+                                        <Button
+                                            size="lg"
+                                            variant="outline"
+                                            onClick={() => playSound(item.sentence, 'hi-IN')}
+                                            className="rounded-full"
+                                        >
+                                            <Volume2 className="w-6 h-6" />
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={() => playSound(item.meaning, 'en-IN')}
+                                            className="rounded-full text-muted-foreground"
+                                        >
+                                            <Volume2 className="w-4 h-4 mr-1" />
+                                            Eng
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </Card>

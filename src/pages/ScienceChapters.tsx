@@ -37,7 +37,7 @@ const ScienceChapters = () => {
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate("/subjects")}
+                    onClick={() => navigate(-1)}
                     className="rounded-full hover:bg-muted"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />

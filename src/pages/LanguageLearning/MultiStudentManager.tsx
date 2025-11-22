@@ -70,7 +70,7 @@ export default function MultiStudentManager() {
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate('/language-learning')}
+                    onClick={() => navigate(-1)}
                     className="rounded-full"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />
@@ -135,8 +135,8 @@ export default function MultiStudentManager() {
                                         key={avatar}
                                         onClick={() => setNewStudent({ ...newStudent, avatar })}
                                         className={`text-3xl p-2 rounded-lg border-2 transition-all ${newStudent.avatar === avatar
-                                                ? 'border-indigo-500 bg-indigo-50'
-                                                : 'border-gray-300 hover:border-indigo-300'
+                                            ? 'border-indigo-500 bg-indigo-50'
+                                            : 'border-gray-300 hover:border-indigo-300'
                                             }`}
                                     >
                                         {avatar}

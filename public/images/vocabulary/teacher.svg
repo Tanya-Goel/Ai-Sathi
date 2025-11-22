@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#eebb99;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e0a880;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="sareeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e67e22;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d35400;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Hair (Bun) -->
+  <circle cx="50" cy="20" r="14" fill="#2c3e50" />
+  
+  <!-- Face -->
+  <ellipse cx="50" cy="25" rx="10" ry="12" fill="url(#skinGrad)" />
+  
+  <!-- Neck -->
+  <rect x="46" y="35" width="8" height="6" fill="url(#skinGrad)" />
+
+  <!-- Blouse -->
+  <path d="M35 40 Q 50 45 65 40 L 65 55 L 35 55 Z" fill="#c0392b" />
+  <path d="M35 40 Q 30 45 28 55 L 35 55" fill="#c0392b" /> <!-- Sleeve L -->
+  <path d="M65 40 Q 70 45 72 55 L 65 55" fill="#c0392b" /> <!-- Sleeve R -->
+
+  <!-- Arms -->
+  <path d="M28 55 L 25 75" stroke="url(#skinGrad)" stroke-width="4" stroke-linecap="round" />
+  <path d="M72 55 L 75 70" stroke="url(#skinGrad)" stroke-width="4" stroke-linecap="round" />
+  
+  <!-- Hands -->
+  <circle cx="25" cy="76" r="2.5" fill="url(#skinGrad)" />
+  <circle cx="75" cy="71" r="2.5" fill="url(#skinGrad)" />
+
+  <!-- Saree Body -->
+  <path d="M30 55 Q 50 50 70 55 L 75 95 L 25 95 Z" fill="url(#sareeGrad)" />
+  
+  <!-- Saree Pallu/Pleats -->
+  <path d="M30 55 L 60 95 L 70 95 L 40 55 Z" fill="#d35400" opacity="0.6" />
+  <path d="M30 55 Q 50 65 70 55" stroke="#c0392b" stroke-width="1" fill="none" />
+  
+  <!-- Facial Features -->
+  <circle cx="46" cy="24" r="1" fill="#000" /> <!-- Eye L -->
+  <circle cx="54" cy="24" r="1" fill="#000" /> <!-- Eye R -->
+  <path d="M47 30 Q 50 32 53 30" stroke="#000" stroke-width="0.5" fill="none" /> <!-- Smile -->
+  <circle cx="50" cy="20" r="0.8" fill="#c0392b" /> <!-- Bindi -->
+  
+  <!-- Glasses -->
+  <g stroke="#333" stroke-width="0.5" fill="none">
+    <circle cx="46" cy="24" r="2.5" />
+    <circle cx="54" cy="24" r="2.5" />
+    <line x1="48.5" y1="24" x2="51.5" y2="24" />
+  </g>
+
+  <!-- Book in Hand -->
+  <rect x="20" y="65" width="12" height="15" fill="#3498db" transform="rotate(-10 26 72)" />
+  <rect x="22" y="67" width="8" height="11" fill="#ecf0f1" transform="rotate(-10 26 72)" />
+
+</svg>

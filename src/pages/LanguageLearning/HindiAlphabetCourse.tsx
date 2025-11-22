@@ -61,7 +61,7 @@ export default function HindiAlphabetCourse() {
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate('/language-learning')}
+                    onClick={() => navigate(-1)}
                     className="rounded-full"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />
@@ -114,8 +114,8 @@ export default function HindiAlphabetCourse() {
                             <Card
                                 key={lesson.id}
                                 className={`p-4 transition-all ${unlocked
-                                        ? 'cursor-pointer hover:shadow-lg hover:scale-[1.02]'
-                                        : 'opacity-60'
+                                    ? 'cursor-pointer hover:shadow-lg hover:scale-[1.02]'
+                                    : 'opacity-60'
                                     }`}
                                 onClick={() => handleLessonClick(lesson)}
                             >
@@ -123,10 +123,10 @@ export default function HindiAlphabetCourse() {
                                     {/* Icon */}
                                     <div
                                         className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${completed
-                                                ? 'bg-gradient-to-br from-green-500 to-emerald-500'
-                                                : unlocked
-                                                    ? 'bg-gradient-to-br from-purple-500 to-pink-500'
-                                                    : 'bg-gray-300'
+                                            ? 'bg-gradient-to-br from-green-500 to-emerald-500'
+                                            : unlocked
+                                                ? 'bg-gradient-to-br from-purple-500 to-pink-500'
+                                                : 'bg-gray-300'
                                             }`}
                                     >
                                         {completed ? (

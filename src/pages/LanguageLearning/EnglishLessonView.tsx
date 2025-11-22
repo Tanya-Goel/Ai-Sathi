@@ -52,8 +52,8 @@ export default function EnglishLessonView() {
     const playLetterSound = (letterId: string) => {
         const letter = getEnglishLetterById(letterId);
         if (letter) {
-            // Play letter name and example word
-            play(`${letter.letter}. ${letter.examples[0].word}`, 'en-IN').catch(console.error);
+            // Play letter name only
+            play(letter.letter, 'en-IN').catch(console.error);
         }
     };
 
@@ -113,7 +113,7 @@ export default function EnglishLessonView() {
     const renderExercise = () => {
         switch (currentExercise.type) {
             case 'introduction':
-                return <IntroductionExercise exercise={currentExercise} onNext={handleNext} playSound={playLetterSound} />;
+                return <IntroductionExercise exercise={currentExercise} onNext={handleNext} playSound={playLetterSound} playText={play} />;
 
             case 'listen-repeat':
                 return <ListenRepeatExercise exercise={currentExercise} onNext={handleNext} playSound={playLetterSound} />;
@@ -154,7 +154,7 @@ export default function EnglishLessonView() {
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate('/language-learning/english-course')}
+                    onClick={() => navigate(-1)}
                     className="rounded-full"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />
@@ -195,10 +195,12 @@ function IntroductionExercise({
     exercise,
     onNext,
     playSound,
+    playText,
 }: {
     exercise: EnglishExercise;
     onNext: () => void;
     playSound: (letterId: string) => void;
+    playText: (text: string, lang: string) => Promise<void>;
 }) {
     const letters = exercise.data.letters.map((id: string) => getEnglishLetterById(id)).filter(Boolean) as EnglishLetter[];
 
@@ -235,13 +237,28 @@ function IntroductionExercise({
                         <div className="space-y-2">
                             <p className="text-sm font-semibold text-foreground">Examples:</p>
                             {letter.examples.map((example, idx) => (
-                                <div key={idx} className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
-                                    <span className="text-2xl">{example.image}</span>
-                                    <div>
-                                        <p className="font-bold text-foreground">{example.word}</p>
-                                        <p className="text-sm text-muted-foreground">
-                                            {example.hindi} / {example.kannada}
-                                        </p>
+                                <div key={idx} className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-2xl">{example.image}</span>
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <p className="font-bold text-foreground">{example.word}</p>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-6 w-6"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        playText(example.word, 'en-IN');
+                                                    }}
+                                                >
+                                                    <Volume2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                            <p className="text-sm text-muted-foreground">
+                                                {example.hindi} / {example.kannada}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             ))}

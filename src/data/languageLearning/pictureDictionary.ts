@@ -147,7 +147,7 @@ export const pictureDictionary: DictionaryCategory[] = [
         items: [
             {
                 id: 'school-1',
-                picture: '/images/vocabulary/book.png',
+                picture: '/images/vocabulary/book.svg',
                 english: 'Book',
                 hindi: 'किताब',
                 kannada: 'ಪುಸ್ತಕ',
@@ -157,7 +157,7 @@ export const pictureDictionary: DictionaryCategory[] = [
             },
             {
                 id: 'school-2',
-                picture: '/images/vocabulary/pencil.png',
+                picture: '/images/vocabulary/pencil.svg',
                 english: 'Pencil',
                 hindi: 'पेंसिल',
                 kannada: 'ಪೆನ್ಸಿಲ್',
@@ -167,7 +167,7 @@ export const pictureDictionary: DictionaryCategory[] = [
             },
             {
                 id: 'school-3',
-                picture: '/images/vocabulary/bag.png',
+                picture: '/images/vocabulary/bag.svg',
                 english: 'Bag',
                 hindi: 'बैग',
                 kannada: 'ಚೀಲ',
@@ -177,7 +177,7 @@ export const pictureDictionary: DictionaryCategory[] = [
             },
             {
                 id: 'school-4',
-                picture: '/images/vocabulary/teacher.png',
+                picture: '/images/vocabulary/teacher.svg',
                 english: 'Teacher',
                 hindi: 'शिक्षक',
                 kannada: 'ಶಿಕ್ಷಕ',

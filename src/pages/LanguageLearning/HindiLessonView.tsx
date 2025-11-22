@@ -186,10 +186,10 @@ export default function HindiLessonView() {
                                     onClick={() => !isMatched && handleSelect(hindi, 'hindi')}
                                     disabled={!!isMatched}
                                     className={`w-full p-4 rounded-xl border-2 font-bold text-lg transition-all ${isMatched
-                                            ? 'bg-green-100 border-green-500 text-green-700'
-                                            : isSelected
-                                                ? 'bg-blue-100 border-blue-500'
-                                                : 'bg-white border-gray-300 hover:border-blue-300'
+                                        ? 'bg-green-100 border-green-500 text-green-700'
+                                        : isSelected
+                                            ? 'bg-blue-100 border-blue-500'
+                                            : 'bg-white border-gray-300 hover:border-blue-300'
                                         }`}
                                 >
                                     {hindi}
@@ -209,10 +209,10 @@ export default function HindiLessonView() {
                                     onClick={() => !isMatched && handleSelect(english, 'english')}
                                     disabled={!!isMatched}
                                     className={`w-full p-4 rounded-xl border-2 font-bold text-lg transition-all ${isMatched
-                                            ? 'bg-green-100 border-green-500 text-green-700'
-                                            : isSelected
-                                                ? 'bg-blue-100 border-blue-500'
-                                                : 'bg-white border-gray-300 hover:border-blue-300'
+                                        ? 'bg-green-100 border-green-500 text-green-700'
+                                        : isSelected
+                                            ? 'bg-blue-100 border-blue-500'
+                                            : 'bg-white border-gray-300 hover:border-blue-300'
                                         }`}
                                 >
                                     {english}
@@ -260,7 +260,7 @@ export default function HindiLessonView() {
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate('/language-learning/hindi-course')}
+                    onClick={() => navigate(-1)}
                     className="rounded-full"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />
