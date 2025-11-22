@@ -38,6 +38,8 @@ const Subjects = () => {
     };
   }, []);
 
+  const selectedClass = localStorage.getItem("selectedClass");
+
   const subjects = [
     {
       title: "Maths (गणित)",
@@ -53,7 +55,13 @@ const Subjects = () => {
       color: "accent" as const,
       route: "/science-chapters",
     },
-  ];
+  ].filter(subject => {
+    // Hide Science for Class 1
+    if (selectedClass === "1" && subject.title.includes("Science")) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-primary/5">

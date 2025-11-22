@@ -25,6 +25,7 @@ const ClassSelection = () => {
         { id: 3, enabled: false },
         { id: 4, enabled: false },
         { id: 5, enabled: false },
+        { id: 6, enabled: true },
     ];
 
     const handleClassSelect = (classNum: number, enabled: boolean) => {
@@ -65,9 +66,9 @@ const ClassSelection = () => {
                 kn: "ಈಗ ಲಭ್ಯವಿದೆ",
             },
             info: {
-                en: "All classes 1-5 are now available with full course content!",
-                hi: "सभी कक्षाएं 1-5 पूर्ण पाठ्यक्रम सामग्री के साथ उपलब्ध हैं!",
-                kn: "ಎಲ್ಲಾ ತರಗತಿಗಳು 1-5 ಸಂಪೂರ್ಣ ಕೋರ್ಸ್ ವಿಷಯದೊಂದಿಗೆ ಲಭ್ಯವಿದೆ!",
+                en: "Classes 1 and 6 are now available with full course content!",
+                hi: "कक्षा 1 और 6 अब पूर्ण पाठ्यक्रम सामग्री के साथ उपलब्ध हैं!",
+                kn: "ತರಗತಿ 1 ಮತ್ತು 6 ಈಗ ಸಂಪೂರ್ಣ ಕೋರ್ಸ್ ವಿಷಯದೊಂದಿಗೆ ಲಭ್ಯವಿದೆ!",
             },
             languageCourse: {
                 en: "Language Literacy Course",
