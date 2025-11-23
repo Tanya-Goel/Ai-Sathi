@@ -25,6 +25,49 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { getLessonById, getLocalizedText, type Lesson, type LessonCard } from "@/data/lessonContent";
 import { answerQuestionSimple } from "@/services/searchService";
 import { toast } from "sonner";
+import EmojiImage from "@/components/EmojiImage";
+
+// Component to render visual content with emoji images
+const VisualContent = ({ visual }: { visual: string }) => {
+  // Regex to match emojis
+  const emojiRegex = /(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/gu;
+  const parts: (string | JSX.Element)[] = [];
+  let lastIndex = 0;
+  let match;
+  let key = 0;
+
+  const matches = [...visual.matchAll(emojiRegex)];
+  
+  matches.forEach((match) => {
+    // Add text before emoji
+    if (match.index !== undefined && match.index > lastIndex) {
+      parts.push(visual.substring(lastIndex, match.index));
+    }
+    
+    // Add emoji as image
+    parts.push(
+      <EmojiImage 
+        key={`emoji-${key++}`}
+        emoji={match[0]} 
+        size={48}
+        className="mx-1"
+      />
+    );
+    
+    lastIndex = (match.index || 0) + match[0].length;
+  });
+  
+  // Add remaining text
+  if (lastIndex < visual.length) {
+    parts.push(visual.substring(lastIndex));
+  }
+  
+  return (
+    <div className="text-2xl font-bold flex flex-wrap items-center justify-center gap-1">
+      {parts.length > 0 ? parts : visual}
+    </div>
+  );
+};
 
 export default function Learn() {
   const navigate = useNavigate();
@@ -265,7 +308,7 @@ export default function Learn() {
           {/* Visual Aid */}
           {currentCard.visual && (
             <div className="p-6 bg-white/50 rounded-xl mb-6 text-center">
-              <p className="text-2xl font-bold">{currentCard.visual}</p>
+              <VisualContent visual={currentCard.visual} />
             </div>
           )}
 

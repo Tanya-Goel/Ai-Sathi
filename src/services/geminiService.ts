@@ -1,9 +1,9 @@
 /**
- * GEMINI AI SERVICE - TEMPORARY PROTOTYPE ENGINE
+ * AI SERVICE - TEMPORARY PROTOTYPE ENGINE
  * 
  * ⚠️ REPLACE WITH SLM LATER ⚠️
  * 
- * All Gemini API calls are isolated here for easy replacement.
+ * All AI API calls are isolated here for easy replacement.
  * When your SLM is ready, replace functions in this file with your local model calls.
  * 
  * Search for: "// 🔄 REPLACE WITH SLM" to find all integration points.
@@ -35,12 +35,12 @@ interface GeminiResponse {
 
 /**
  * 🔄 REPLACE WITH SLM
- * Generic Gemini API caller
+ * Generic API caller
  */
 async function callGemini(prompt: string): Promise<string> {
   // If no API key is configured, return a helpful fallback message
   if (!GEMINI_API_KEY || !GEMINI_API_URL) {
-    console.warn("⚠️ Gemini API key not configured. Using fallback responses.");
+    console.warn("⚠️ API key not configured. Using fallback responses.");
     console.warn("💡 Make sure VITE_GEMINI_API_KEY is set in your .env file");
     return getFallbackResponse(prompt);
   }
@@ -58,7 +58,7 @@ async function callGemini(prompt: string): Promise<string> {
   };
 
   try {
-    console.log("📡 Calling Gemini API...");
+    console.log("📡 Calling AI API...");
     const response = await fetch(GEMINI_API_URL, {
       method: "POST",
       headers: {
@@ -69,7 +69,7 @@ async function callGemini(prompt: string): Promise<string> {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`❌ Gemini API error: ${response.status} - ${errorText}`);
+      console.error(`❌ AI API error: ${response.status} - ${errorText}`);
       // Fall back to local responses if API fails
       return getFallbackResponse(prompt);
     }
@@ -78,21 +78,21 @@ async function callGemini(prompt: string): Promise<string> {
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
     
     if (text.trim()) {
-      console.log("✅ Gemini API response received");
+      console.log("✅ AI API response received");
       return text.trim();
     } else {
-      console.warn("⚠️ Empty response from Gemini, using fallback");
+      console.warn("⚠️ Empty response from API, using fallback");
       return getFallbackResponse(prompt);
     }
   } catch (error) {
-    console.error("❌ Gemini API call failed:", error);
+    console.error("❌ AI API call failed:", error);
     // Return fallback response instead of throwing
     return getFallbackResponse(prompt);
   }
 }
 
 /**
- * Fallback responses when Gemini API is not available
+ * Fallback responses when AI API is not available
  */
 function getFallbackResponse(prompt: string): string {
   const lowerPrompt = prompt.toLowerCase();
@@ -180,7 +180,7 @@ Placement logic:
     if (jsonMatch) {
       return JSON.parse(jsonMatch[0]);
     }
-    throw new Error("Invalid JSON response from Gemini");
+    throw new Error("Invalid JSON response from API");
   } catch (error) {
     console.error("Assessment scoring failed:", error);
     // Fallback: simple rule-based scoring
@@ -272,7 +272,7 @@ Return ONLY valid JSON array:
     if (jsonMatch) {
       return JSON.parse(jsonMatch[0]);
     }
-    throw new Error("Invalid JSON response from Gemini");
+    throw new Error("Invalid JSON response from API");
   } catch (error) {
     console.error("Quiz generation failed:", error);
     // Fallback: return sample questions
