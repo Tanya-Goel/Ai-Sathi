@@ -2,14 +2,14 @@
  * SEARCH SERVICE
  * 
  * Provides question-answering functionality for students
- * Uses Gemini AI to answer questions (Google Search can be added later)
+ * Uses AI to answer questions (Google Search can be added later)
  */
 
 import { getTutoringResponse } from "./geminiService";
 
 /**
  * Answer a student's question using AI
- * For now, uses Gemini. Can be extended with Google Search later.
+ * Can be extended with Google Search later.
  */
 export async function answerQuestionSimple(
   question: string,

@@ -108,8 +108,8 @@ const Chat = () => {
   }, [initialQuestion]);
 
   const getAIResponse = async (userMessage: string): Promise<string> => {
-    // 🔄 USING GEMINI (temporary - will replace with local SLM later)
-    console.log("🤖 Using Gemini API for tutoring");
+    // 🔄 USING AI API (temporary - will replace with local SLM later)
+    console.log("🤖 Using AI API for tutoring");
 
     // Build chat history for context
     const chatHistory = messages.slice(-4).map(msg => ({
@@ -117,7 +117,7 @@ const Chat = () => {
       content: msg.content,
     }));
 
-    // Call Gemini tutoring service - no fallbacks, pure AI
+    // Call AI tutoring service - no fallbacks, pure AI
     const response = await getTutoringResponse({
       subject,
       chapter,
