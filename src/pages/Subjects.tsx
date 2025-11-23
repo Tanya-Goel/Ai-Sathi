@@ -42,22 +42,22 @@ const Subjects = () => {
 
   const subjects = [
     {
-      title: "Maths (गणित)",
-      description: "Grade 5 NCERT - Numbers, Addition, Fractions",
+      titleKey: "Maths",
+      descriptionKey: "Grade 5 NCERT - Numbers, Addition, Fractions",
       icon: Calculator,
       color: "primary" as const,
       route: "/maths-chapters",
     },
     {
-      title: "Science (विज्ञान)",
-      description: "Grade 5 NCERT - Body, Plants, Weather",
+      titleKey: "Science",
+      descriptionKey: "Grade 5 NCERT - Body, Plants, Weather",
       icon: Globe,
       color: "accent" as const,
       route: "/science-chapters",
     },
   ].filter(subject => {
     // Hide Science for Class 1
-    if (selectedClass === "1" && subject.title.includes("Science")) {
+    if (selectedClass === "1" && subject.titleKey === "Science") {
       return false;
     }
     return true;
@@ -116,20 +116,20 @@ const Subjects = () => {
 
       {/* Subjects Grid */}
       <div className="px-6 pb-8 space-y-4">
-        <h2 className="text-lg font-semibold text-foreground">Choose a Subject</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t("Choose a Subject")}</h2>
         <div className="grid gap-4">
           {subjects.map((subject) => (
             <SubjectCard
-              key={subject.title}
-              title={subject.title}
-              description={subject.description}
+              key={subject.titleKey}
+              title={t(subject.titleKey)}
+              description={t(subject.descriptionKey)}
               icon={subject.icon}
               color={subject.color}
               onClick={() => {
                 if (subject.route === "/science-chapters" || subject.route === "/maths-chapters" || subject.route === "/language-learning") {
                   navigate(subject.route);
                 } else {
-                  toast.info("Coming soon! Start with Maths for now.");
+                  toast.info(t("Coming Soon") + "! Start with " + t("Maths") + " for now.");
                 }
               }}
             />
